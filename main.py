@@ -59,7 +59,7 @@ def edge_thin(G_x, G_y):
     """
     I = (G_x ** 2 + G_y ** 2) ** 0.5
     angle = np.arctan(G_y / G_x)
-    
+
     # |angle_round| will be an array of directions:
     # 0: horizontal direction
     # 1: lower right direction
@@ -113,7 +113,7 @@ def edge_thin(G_x, G_y):
     return result
 
 
-def edge_detect(img, sigma=1.4, window=5, gradient=sobel_filter):
+def edge_detect(img, sigma=1.4, window=7, gradient=sobel_filter):
     # Step 1: smoothen the image
     t = (((window - 1)/2)-0.5)/sigma  # Some magic for filter kernel size
     smoothened = gaussian_filter(img, sigma=sigma, truncate=t)
@@ -123,6 +123,7 @@ def edge_detect(img, sigma=1.4, window=5, gradient=sobel_filter):
 
     # Step 2: compute image gradients
     G_x, G_y = gradient(smoothened)
+    I = (G_x ** 2 + G_y ** 2) ** 0.5
 
     # Step 3: thin edges
     thin_map = edge_thin(G_x, G_y)
@@ -142,7 +143,7 @@ def main():
     filename = sys.argv[1]
     img = imread(filename, flatten=True)
     print(img.shape)
-    edge_detect(img, sigma=10, gradient=sobel_filter)
+    edge_detect(img, sigma=100, gradient=sobel_filter)
 
 
 if __name__ == "__main__":
